@@ -214,15 +214,23 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      justify-content:flex-start;
+      justify-content:center;
       text-align:center;
     }
 
-    .child-svg{
+    .weather-visual{
       width:100%;
-      max-width:330px;
-      height:auto;
-      margin-bottom:10px;
+      max-width:300px;
+      min-height:150px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:12px;
+    }
+
+    .weather-emoji{
+      font-size:96px;
+      line-height:1;
     }
 
     .visual-title{
@@ -462,6 +470,14 @@
       line-height:1.5;
     }
 
+    .temp-layout{
+      display:grid;
+      grid-template-columns: 1fr 230px;
+      gap:18px;
+      align-items:start;
+      margin-top:8px;
+    }
+
     .temp-list{
       margin:10px 0 0 0;
       padding-left:18px;
@@ -482,6 +498,26 @@
       color:#7f1d1d;
     }
 
+    .child-head-box{
+      background:#fff;
+      border:2px solid #fecaca;
+      border-radius:18px;
+      padding:12px;
+      text-align:center;
+    }
+
+    .child-head-box h4{
+      margin:0 0 8px;
+      font-size:15px;
+      color:#991b1b;
+    }
+
+    .child-head-svg{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
     footer{
       text-align:center;
       margin-top:18px;
@@ -493,7 +529,7 @@
       .grid{ grid-template-columns:1fr; }
       h1{ font-size:34px; }
       .results{ grid-template-columns:1fr; }
-      .input-row,.formula,.scene-area{ grid-template-columns:1fr; }
+      .input-row,.formula,.scene-area,.temp-layout{ grid-template-columns:1fr; }
       .thermo-box,.visual-box{ min-height:auto; }
     }
   </style>
@@ -535,36 +571,9 @@
             </div>
 
             <div class="visual-box">
-              <svg class="child-svg" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="75" cy="45" r="22" fill="#fcd34d"/>
-                <circle cx="75" cy="45" r="34" fill="none" stroke="#fbbf24" stroke-width="5"/>
-                <g stroke="#fbbf24" stroke-width="4" stroke-linecap="round">
-                  <line x1="75" y1="6" x2="75" y2="0"/>
-                  <line x1="75" y1="90" x2="75" y2="96"/>
-                  <line x1="36" y1="45" x2="30" y2="45"/>
-                  <line x1="114" y1="45" x2="120" y2="45"/>
-                  <line x1="48" y1="18" x2="43" y2="13"/>
-                  <line x1="102" y1="72" x2="107" y2="77"/>
-                  <line x1="48" y1="72" x2="43" y2="77"/>
-                  <line x1="102" y1="18" x2="107" y2="13"/>
-                </g>
-                <circle cx="68" cy="39" r="3" fill="#7c2d12"/>
-                <circle cx="82" cy="39" r="3" fill="#7c2d12"/>
-                <path d="M67 51 Q75 58 83 51" stroke="#7c2d12" stroke-width="3" fill="none"/>
-
-                <circle cx="180" cy="86" r="42" fill="#fde68a"/>
-                <path d="M145 76 Q180 32 215 76" fill="#7c3aed"/>
-                <circle cx="166" cy="82" r="4" fill="#0f172a"/>
-                <circle cx="194" cy="82" r="4" fill="#0f172a"/>
-                <path d="M168 99 Q180 109 192 99" stroke="#0f172a" stroke-width="3" fill="none"/>
-                <rect x="191" y="96" width="52" height="8" rx="4" fill="#cbd5e1" stroke="#64748b" stroke-width="1.5"/>
-                <rect x="235" y="97.5" width="8" height="5" rx="2" fill="#ef4444"/>
-                <rect x="145" y="128" width="70" height="58" rx="18" fill="#60a5fa"/>
-                <rect x="145" y="183" width="24" height="42" rx="10" fill="#fde68a"/>
-                <rect x="191" y="183" width="24" height="42" rx="10" fill="#fde68a"/>
-                <rect x="128" y="136" width="22" height="50" rx="10" fill="#fde68a"/>
-                <rect x="210" y="136" width="22" height="50" rx="10" fill="#fde68a"/>
-              </svg>
+              <div class="weather-visual">
+                <div class="weather-emoji" id="weatherEmoji">🌤️</div>
+              </div>
 
               <div class="visual-title" id="visualTitle">Příjemná teplota</div>
               <div class="visual-desc" id="visualDesc">
@@ -647,15 +656,39 @@
 
         <div class="exampleBox">
           <strong>Tělesná teplota člověka:</strong>
-          <ul class="temp-list">
-            <li><strong>pod 35,0 °C</strong> – podchlazení, tělo je příliš studené.</li>
-            <li><strong>36,0–37,2 °C</strong> – běžná nebo normální tělesná teplota.</li>
-            <li><strong>37,3–37,9 °C</strong> – zvýšená teplota.</li>
-            <li><strong>38,0–38,9 °C</strong> – horečka.</li>
-            <li><strong>39,0–40,0 °C</strong> – vysoká horečka.</li>
-            <li><strong>nad 40,0 °C</strong> – velmi nebezpečný stav.</li>
-            <li><strong>kolem 42 °C</strong> – kritická teplota, může dojít k ohrožení života.</li>
-          </ul>
+
+          <div class="temp-layout">
+            <div>
+              <ul class="temp-list">
+                <li><strong>pod 35,0 °C</strong> – podchlazení, tělo je příliš studené.</li>
+                <li><strong>36,0–37,2 °C</strong> – běžná nebo normální tělesná teplota.</li>
+                <li><strong>37,3–37,9 °C</strong> – zvýšená teplota.</li>
+                <li><strong>38,0–38,9 °C</strong> – horečka.</li>
+                <li><strong>39,0–40,0 °C</strong> – vysoká horečka.</li>
+                <li><strong>nad 40,0 °C</strong> – velmi nebezpečný stav.</li>
+                <li><strong>kolem 42 °C</strong> – kritická teplota, může dojít k ohrožení života.</li>
+              </ul>
+            </div>
+
+            <div class="child-head-box">
+              <h4>Měření tělesné teploty</h4>
+              <svg class="child-head-svg" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="110" cy="95" r="58" fill="#fde68a"/>
+                <path d="M58 78 Q110 20 162 78" fill="#8b5cf6"/>
+                <circle cx="92" cy="92" r="4" fill="#0f172a"/>
+                <circle cx="128" cy="92" r="4" fill="#0f172a"/>
+                <path d="M95 118 Q110 128 125 118" stroke="#0f172a" stroke-width="3" fill="none"/>
+                <circle cx="82" cy="107" r="5" fill="#fca5a5"/>
+                <circle cx="138" cy="107" r="5" fill="#fca5a5"/>
+
+                <rect x="118" y="114" width="60" height="10" rx="5" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+                <rect x="165" y="116.5" width="10" height="5" rx="2" fill="#ef4444"/>
+                <rect x="124" y="117" width="22" height="4" rx="2" fill="#94a3b8"/>
+
+                <path d="M70 150 Q110 180 150 150" fill="#60a5fa"/>
+              </svg>
+            </div>
+          </div>
 
           <div class="warning">
             <strong>Kdy volat lékaře nebo rychlou pomoc:</strong><br>
@@ -700,6 +733,7 @@
     const bulb = document.getElementById("bulb");
     const digitalDisplay = document.getElementById("digitalDisplay");
 
+    const weatherEmoji = document.getElementById("weatherEmoji");
     const visualTitle = document.getElementById("visualTitle");
     const visualDesc = document.getElementById("visualDesc");
     const stateBadge = document.getElementById("stateBadge");
@@ -809,37 +843,46 @@
       let title = "Příjemná teplota";
       let desc = "Běžná pokojová nebo příjemná teplota. Venku ani doma není příliš zima ani horko.";
       let badge = "Běžná teplota";
+      let emoji = "🌤️";
 
       if(c < 0){
         title = "Mrzne";
         desc = "Je pod bodem mrazu. Voda může zamrzat a venku bývá led nebo sníh.";
         badge = "Zima / mráz";
+        emoji = "❄️";
       } else if(c < 10){
         title = "Chladno";
         desc = "Je chladnější počasí. Hodí se bunda nebo svetr.";
         badge = "Chladné počasí";
+        emoji = "🧥";
       } else if(c < 30){
         title = "Příjemná teplota";
         desc = "Je to příjemná teplota pro běžný den doma i venku.";
         badge = "Běžný den";
+        emoji = "🌤️";
       } else if(c < 38){
         title = "Horko";
         desc = "Je opravdu teplo. Je důležité pít dostatek tekutin a chránit se před sluncem.";
         badge = "Horký den";
+        emoji = "☀️";
       } else if(c < 41){
-        title = "Nemocné dítě / horečka";
+        title = "Horečka";
         desc = "Taková teplota může znamenat horečku. Je vhodné odpočívat, pít a sledovat zdravotní stav.";
-        badge = "Horečka";
+        badge = "Nemoc / horečka";
+        emoji = "🤒";
       } else if(c < 99.5){
         title = "Velmi vysoká teplota";
         desc = "Takto vysoká teplota je velmi nebezpečná a je potřeba rychle vyhledat pomoc.";
         badge = "Nebezpečný stav";
+        emoji = "🔥";
       } else {
         title = "Voda se vaří";
         desc = "Při přibližně 100 °C se voda vaří. To využíváme při vaření i v laboratoři.";
         badge = "Bod varu vody";
+        emoji = "♨️";
       }
 
+      weatherEmoji.textContent = emoji;
       visualTitle.textContent = title;
       visualDesc.textContent = desc;
       stateBadge.textContent = badge;
