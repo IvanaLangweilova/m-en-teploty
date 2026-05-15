@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teplota – převody a teploměr</title>
+  <style>
+    :root{
+      --bg1:#dbeafe;
+      --bg2:#fef3c7;
+      --bg3:#fee2e2;
+      --dark:#0f172a;
+      --muted:#475569;
+      --line:#cbd5e1;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      color:var(--dark);
+    }
+
+    .page{
+      max-width:1320px;
+      margin:0 auto;
+      padding:24px;
+    }
+
+    header{
+      background:rgba(255,255,255,0.92);
+      border:2px solid rgba(255,255,255,0.95);
+      box-shadow:0 18px 40px rgba(15,23,42,0.13);
+      border-radius:28px;
+      padding:28px;
+      text-align:center;
+      margin-bottom:22px;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-size:42px;
+      letter-spacing:1px;
+      color:#dc2626;
+    }
+
+    .subtitle{
+      font-size:18px;
+      line-height:1.55;
+      color:var(--muted);
+      max-width:1050px;
+      margin:0 auto;
+    }
+
+    .author{
+      margin-top:14px;
+      font-size:15px;
+      color:#334155;
+      font-weight:bold;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap:22px;
+      align-items:start;
+    }
+
+    .card{
+      background:rgba(255,255,255,0.94);
+      border-radius:26px;
+      padding:22px;
+      box-shadow:0 18px 35px rgba(15,23,42,0.12);
+      border:1px solid rgba(255,255,255,0.9);
+    }
+
+    .card h2{
+      margin:0 0 16px;
+      font-size:25px;
+      color:#0f172a;
+    }
+
+    .scene-wrap{
+      background:linear-gradient(180deg,#eff6ff,#fff7ed);
+      border:3px solid #fca5a5;
+      border-radius:22px;
+      padding:18px;
+      margin-bottom:18px;
+    }
+
+    .scene-title{
+      font-weight:bold;
+      font-size:20px;
+      text-align:center;
+      margin-bottom:12px;
+      color:#991b1b;
+    }
+
+    .scene-area{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:18px;
+      align-items:center;
+    }
+
+    .thermo-box{
+      background:white;
+      border:2px solid #fecaca;
+      border-radius:22px;
+      padding:18px;
+      min-height:400px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .thermometer{
+      position:relative;
+      width:120px;
+      height:320px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .tube{
+      position:absolute;
+      width:34px;
+      height:240px;
+      left:43px;
+      top:20px;
+      border-radius:22px;
+      background:#f8fafc;
+      border:4px solid #334155;
+      overflow:hidden;
+    }
+
+    .mercury{
+      position:absolute;
+      bottom:0;
+      left:0;
+      width:100%;
+      height:40%;
+      background:linear-gradient(180deg,#fca5a5,#dc2626);
+      transition:height .3s ease, background .3s ease;
+    }
+
+    .bulb{
+      position:absolute;
+      width:86px;
+      height:86px;
+      left:17px;
+      bottom:0;
+      border-radius:50%;
+      background:linear-gradient(180deg,#fca5a5,#dc2626);
+      border:4px solid #334155;
+      transition:background .3s ease;
+    }
+
+    .tube-core{
+      position:absolute;
+      width:14px;
+      left:53px;
+      top:34px;
+      height:214px;
+      border-radius:20px;
+      background:rgba(255,255,255,0.4);
+      pointer-events:none;
+    }
+
+    .scale{
+      position:absolute;
+      right:-36px;
+      top:18px;
+      height:245px;
+      width:60px;
+    }
+
+    .mark{
+      position:absolute;
+      left:0;
+      width:100%;
+      height:1px;
+    }
+
+    .mark::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:-1px;
+      width:18px;
+      height:2px;
+      background:#334155;
+    }
+
+    .mark span{
+      position:absolute;
+      left:24px;
+      top:-8px;
+      font-size:12px;
+      font-weight:bold;
+      color:#334155;
+    }
+
+    .visual-box{
+      min-height:400px;
+      background:linear-gradient(180deg,#dbeafe,#fefce8);
+      border:2px solid #bfdbfe;
+      border-radius:22px;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+    }
+
+    .emoji-big{
+      font-size:92px;
+      line-height:1;
+      margin-bottom:12px;
+      transition:.3s ease;
+    }
+
+    .visual-title{
+      font-size:24px;
+      font-weight:bold;
+      color:#1e3a8a;
+      margin-bottom:8px;
+    }
+
+    .visual-desc{
+      font-size:16px;
+      line-height:1.5;
+      color:#475569;
+      max-width:360px;
+    }
+
+    .badge{
+      margin-top:14px;
+      display:inline-block;
+      background:#eff6ff;
+      color:#1e3a8a;
+      border:1px solid #bfdbfe;
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:13px;
+      font-weight:bold;
+    }
+
+    .display{
+      background:#020617;
+      color:#22c55e;
+      border-radius:18px;
+      padding:18px;
+      text-align:center;
+      font-size:28px;
+      font-weight:bold;
+      letter-spacing:1px;
+      box-shadow: inset 0 0 20px rgba(34,197,94,0.22);
+      margin:18px 0;
+      min-height:70px;
+    }
+
+    label{
+      display:block;
+      font-weight:bold;
+      margin-bottom:7px;
+      font-size:15px;
+    }
+
+    input, select{
+      width:100%;
+      padding:13px 15px;
+      border-radius:14px;
+      border:2px solid var(--line);
+      font-size:17px;
+      background:#fff;
+      outline:none;
+    }
+
+    input:focus, select:focus{
+      border-color:#dc2626;
+      box-shadow:0 0 0 4px rgba(220,38,38,0.14);
+    }
+
+    input[type="range"]{
+      padding:0;
+      border:none;
+      box-shadow:none;
+    }
+
+    .mode-box{
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      padding:15px;
+      border-radius:18px;
+      margin-bottom:16px;
+    }
+
+    .input-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .slider-card{
+      margin-top:12px;
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .slider-label{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:6px;
+      font-weight:bold;
+      color:#991b1b;
+    }
+
+    .hint{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+      margin-top:8px;
+    }
+
+    .quick{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    button{
+      border:none;
+      border-radius:999px;
+      padding:10px 14px;
+      font-size:15px;
+      font-weight:bold;
+      cursor:pointer;
+      background:#fee2e2;
+      color:#991b1b;
+      transition:.2s;
+    }
+
+    button:hover{
+      transform:translateY(-1px);
+      background:#fecaca;
+    }
+
+    .results{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:12px;
+    }
+
+    .unit{
+      border-radius:18px;
+      padding:15px;
+      color:white;
+      min-height:100px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      box-shadow:0 10px 20px rgba(15,23,42,0.12);
+    }
+
+    .unit:nth-child(1){background:linear-gradient(135deg,#2563eb,#1d4ed8);}
+    .unit:nth-child(2){background:linear-gradient(135deg,#0891b2,#0e7490);}
+    .unit:nth-child(3){background:linear-gradient(135deg,#16a34a,#15803d);}
+    .unit:nth-child(4){background:linear-gradient(135deg,#ea580c,#c2410c);}
+    .unit:nth-child(5){background:linear-gradient(135deg,#7c3aed,#6d28d9);}
+    .unit:nth-child(6){background:linear-gradient(135deg,#db2777,#be185d);}
+
+    .unit .top{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      align-items:flex-start;
+    }
+
+    .symbol{
+      font-size:22px;
+      font-weight:bold;
+    }
+
+    .spoken{
+      font-size:14px;
+      opacity:.92;
+      text-align:right;
+    }
+
+    .value{
+      font-size:20px;
+      font-weight:bold;
+      margin-top:12px;
+      word-break:break-word;
+    }
+
+    .full{
+      font-size:13px;
+      opacity:.95;
+      margin-top:4px;
+    }
+
+    .answerBox{
+      margin-top:18px;
+      background:#f0fdf4;
+      border:2px solid #bbf7d0;
+      border-radius:20px;
+      padding:18px;
+      font-size:16px;
+      line-height:1.6;
+    }
+
+    .answerBox strong{
+      color:#166534;
+    }
+
+    .exampleBox{
+      margin-top:16px;
+      background:#fff7ed;
+      border:2px solid #fed7aa;
+      border-radius:20px;
+      padding:18px;
+      line-height:1.6;
+      font-size:16px;
+    }
+
+    .formula{
+      display:grid;
+      grid-template-columns: repeat(2,1fr);
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .formula div{
+      background:#ffffff;
+      border:1px solid #fed7aa;
+      border-radius:14px;
+      padding:11px;
+      text-align:center;
+      font-weight:bold;
+      color:#7c2d12;
+    }
+
+    .law{
+      margin-top:14px;
+      background:#eff6ff;
+      border:2px solid #bfdbfe;
+      border-radius:18px;
+      padding:14px;
+      font-size:15px;
+      line-height:1.5;
+    }
+
+    footer{
+      text-align:center;
+      margin-top:18px;
+      color:#475569;
+      font-size:14px;
+    }
+
+    @media (max-width:1020px){
+      .grid{ grid-template-columns:1fr; }
+      h1{ font-size:34px; }
+      .results{ grid-template-columns:1fr; }
+      .input-row,.formula,.scene-area{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>TEPLOTA</h1>
+      <p class="subtitle">
+        Teplota nám říká, jak moc je něco teplé nebo studené. Měříme ji teploměrem.
+        Teplotu používáme při měření počasí, tělesné teploty, při vaření, v lednici, v nemocnici,
+        v laboratoři i v běžném životě doma.
+      </p>
+      <p class="subtitle" style="margin-top:10px;">
+        <strong>K čemu je to dobré?</strong> Když umíš pracovat s teplotou, poznáš, jestli má někdo horečku,
+        jaké je venku počasí, kdy voda mrzne nebo se vaří, jak správně nastavit topení
+        a jak převádět teplotu mezi různými jednotkami.
+      </p>
+      <div class="author">Autorka: Mgr. Ivana Langweilová</div>
+    </header>
+
+    <main class="grid">
+      <section class="card">
+        <h2>Teploměr a digitální měření</h2>
+
+        <div class="scene-wrap">
+          <div class="scene-title">SLEDUJ TEPLOTU A JEJÍ VÝZNAM</div>
+
+          <div class="scene-area">
+            <div class="thermo-box">
+              <div class="thermometer">
+                <div class="tube">
+                  <div class="mercury" id="mercury"></div>
+                </div>
+                <div class="tube-core"></div>
+                <div class="bulb" id="bulb"></div>
+                <div class="scale" id="scale"></div>
+              </div>
+            </div>
+
+            <div class="visual-box">
+              <div class="emoji-big" id="emojiBig">🌡️</div>
+              <div class="visual-title" id="visualTitle">Mírná teplota</div>
+              <div class="visual-desc" id="visualDesc">
+                Běžná pokojová teplota. Není ani velké chladno, ani horko.
+              </div>
+              <div class="badge" id="stateBadge">Pokoj / běžné prostředí</div>
+
+              <div class="display" id="digitalDisplay" style="margin-top:18px; width:100%;">
+                20,0 °C
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mode-box">
+          <div class="input-row">
+            <div>
+              <label for="tempInput">Zadej teplotu:</label>
+              <input id="tempInput" type="number" step="any" value="20" />
+            </div>
+            <div>
+              <label for="unitSelect">Vyber jednotku:</label>
+              <select id="unitSelect">
+                <option value="C" selected>°C – stupně Celsia</option>
+                <option value="F">°F – stupně Fahrenheita</option>
+                <option value="K">K – kelvin</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="slider-card">
+            <div class="slider-label">
+              <span>Posuvník teploty</span>
+              <span id="sliderValue">20 °C</span>
+            </div>
+            <input id="tempSlider" type="range" min="-30" max="120" step="0.1" value="20" />
+          </div>
+
+          <div class="hint">
+            Zadej teplotu číslem nebo použij posuvník. Aplikace ti ji převede do dalších jednotek
+            a zároveň ukáže, co taková teplota znamená v praxi.
+          </div>
+
+          <div class="quick">
+            <button data-c="-10">-10 °C</button>
+            <button data-c="0">0 °C</button>
+            <button data-c="20">20 °C</button>
+            <button data-c="36.6">36,6 °C</button>
+            <button data-c="39">39 °C</button>
+            <button data-c="100">100 °C</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Převody teploty a vysvětlení</h2>
+
+        <div class="results" id="results"></div>
+
+        <div class="answerBox" id="answerBox">
+          <strong>Výsledek:</strong> Zadaná teplota se ti zde ukáže v různých jednotkách a s vysvětlením.
+        </div>
+
+        <div class="exampleBox">
+          <strong>Kde teplotu využijeme?</strong><br>
+          Teplotu používáme při sledování počasí, v nemocnici při měření horečky,
+          při vaření a pečení, v lednici a mrazáku, při koupání dítěte,
+          v laboratoři, při topení doma a také v přírodovědě, fyzice a chemii.
+        </div>
+
+        <div class="exampleBox">
+          <strong>Příklady pro žáky:</strong><br>
+          - <strong>0 °C</strong> – voda začíná mrznout.<br>
+          - <strong>36,6 °C</strong> – přibližná normální tělesná teplota člověka.<br>
+          - <strong>39 °C</strong> – horečka, nemocné dítě by mělo odpočívat a je vhodné měřit teplotu.<br>
+          - <strong>100 °C</strong> – voda se vaří.
+        </div>
+
+        <div class="exampleBox">
+          <strong>Zapamatuj si důležité vztahy:</strong>
+          <div class="formula">
+            <div>°F = (°C · 9/5) + 32</div>
+            <div>°C = (°F − 32) · 5/9</div>
+            <div>K = °C + 273,15</div>
+            <div>°C = K − 273,15</div>
+            <div>0 °C = 273,15 K</div>
+            <div>100 °C = 373,15 K</div>
+          </div>
+
+          <div class="law">
+            <strong>Důležité:</strong><br>
+            Ve škole se nejčastěji používají <strong>stupně Celsia (°C)</strong>.
+            V některých zemích, například v USA, se často používají <strong>stupně Fahrenheita (°F)</strong>.
+            Ve fyzice a přírodních vědách se používá také <strong>kelvin (K)</strong>.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Webová učební pomůcka pro výuku teploty, teploměru a převodů jednotek teploty.
+    </footer>
+  </div>
+
+  <script>
+    const tempInput = document.getElementById("tempInput");
+    const unitSelect = document.getElementById("unitSelect");
+    const tempSlider = document.getElementById("tempSlider");
+    const sliderValue = document.getElementById("sliderValue");
+
+    const mercury = document.getElementById("mercury");
+    const bulb = document.getElementById("bulb");
+    const digitalDisplay = document.getElementById("digitalDisplay");
+
+    const emojiBig = document.getElementById("emojiBig");
+    const visualTitle = document.getElementById("visualTitle");
+    const visualDesc = document.getElementById("visualDesc");
+    const stateBadge = document.getElementById("stateBadge");
+
+    const results = document.getElementById("results");
+    const answerBox = document.getElementById("answerBox");
+
+    function formatNumber(n, maxDecimals = 2){
+      return new Intl.NumberFormat("cs-CZ", {
+        maximumFractionDigits:maxDecimals,
+        minimumFractionDigits:0
+      }).format(n);
+    }
+
+    function toCelsius(value, unit){
+      value = parseFloat(value);
+      if(isNaN(value)) value = 0;
+
+      if(unit === "C") return value;
+      if(unit === "F") return (value - 32) * 5/9;
+      if(unit === "K") return value - 273.15;
+      return value;
+    }
+
+    function fromCelsius(c, unit){
+      if(unit === "C") return c;
+      if(unit === "F") return c * 9/5 + 32;
+      if(unit === "K") return c + 273.15;
+      return c;
+    }
+
+    function createScale(){
+      const scale = document.getElementById("scale");
+      const marks = [-20,0,20,40,60,80,100,120];
+      scale.innerHTML = "";
+      marks.forEach(v => {
+        const mark = document.createElement("div");
+        mark.className = "mark";
+        const percent = (v - (-30)) / (120 - (-30)) * 100;
+        mark.style.bottom = percent + "%";
+        mark.innerHTML = `<span>${v}°C</span>`;
+        scale.appendChild(mark);
+      });
+    }
+
+    function setThermometer(c){
+      let percent = (c - (-30)) / (120 - (-30)) * 100;
+      percent = Math.max(0, Math.min(100, percent));
+      mercury.style.height = percent + "%";
+
+      let colorTop = "#93c5fd";
+      let colorBottom = "#2563eb";
+
+      if(c >= 38){
+        colorTop = "#fca5a5";
+        colorBottom = "#dc2626";
+      } else if(c >= 25){
+        colorTop = "#fdba74";
+        colorBottom = "#ea580c";
+      } else if(c >= 5){
+        colorTop = "#fcd34d";
+        colorBottom = "#f59e0b";
+      }
+
+      mercury.style.background = `linear-gradient(180deg, ${colorTop}, ${colorBottom})`;
+      bulb.style.background = `linear-gradient(180deg, ${colorTop}, ${colorBottom})`;
+    }
+
+    function updateVisual(c){
+      let emoji = "🙂";
+      let title = "Mírná teplota";
+      let desc = "Běžná pokojová teplota. Není ani velké chladno, ani horko.";
+      let badge = "Pokoj / běžné prostředí";
+
+      if(c < 0){
+        emoji = "❄️";
+        title = "Mrzne";
+        desc = "Je pod bodem mrazu. Voda může zamrzat, venku bývá led a sníh.";
+        badge = "Zima / mráz";
+      } else if(c < 10){
+        emoji = "🧥";
+        title = "Chladno";
+        desc = "Je chladnější počasí. Hodí se bunda nebo svetr.";
+        badge = "Chladné počasí";
+      } else if(c < 30){
+        emoji = "🌤️";
+        title = "Příjemná teplota";
+        desc = "Příjemná teplota pro běžný den, pobyt venku i doma.";
+        badge = "Běžný den";
+      } else if(c < 38){
+        emoji = "☀️";
+        title = "Horko";
+        desc = "Je opravdu teplo. Je důležité pít dostatek tekutin a chránit se před sluncem.";
+        badge = "Horký den";
+      } else if(c < 41){
+        emoji = "🤒";
+        title = "Horečka";
+        desc = "Tato teplota může znamenat nemoc. U dítěte nebo dospělého je vhodné odpočinek a sledování zdravotního stavu.";
+        badge = "Nemocné dítě / horečka";
+      } else {
+        emoji = "🔥";
+        title = "Velmi vysoká teplota";
+        desc = "Takto vysoká teplota je nebezpečná pro člověka. U kapalin nebo předmětů může znamenat silné zahřátí.";
+        badge = "Velmi vysoká teplota";
+      }
+
+      if(c >= 99.5){
+        emoji = "💧♨️";
+        title = "Voda se vaří";
+        desc = "Při přibližně 100 °C se voda vaří. To využíváme při vaření nebo v laboratoři.";
+        badge = "Bod varu vody";
+      }
+
+      emojiBig.textContent = emoji;
+      visualTitle.textContent = title;
+      visualDesc.textContent = desc;
+      stateBadge.textContent = badge;
+    }
+
+    function updateResults(c){
+      const f = fromCelsius(c, "F");
+      const k = fromCelsius(c, "K");
+
+      const data = [
+        {
+          symbol:"°C",
+          spoken:"Celsius",
+          value:`${formatNumber(c, 2)} °C`,
+          full:"stupně Celsia"
+        },
+        {
+          symbol:"°F",
+          spoken:"Fahrenheit",
+          value:`${formatNumber(f, 2)} °F`,
+          full:"stupně Fahrenheita"
+        },
+        {
+          symbol:"K",
+          spoken:"kelvin",
+          value:`${formatNumber(k, 2)} K`,
+          full:"kelvin"
+        },
+        {
+          symbol:"stav",
+          spoken:"význam",
+          value:getStateText(c),
+          full:"co tato teplota znamená"
+        },
+        {
+          symbol:"voda",
+          spoken:"bod mrazu / varu",
+          value:getWaterInfo(c),
+          full:"porovnání s vodou"
+        },
+        {
+          symbol:"tělo",
+          spoken:"srovnání",
+          value:getBodyInfo(c),
+          full:"porovnání s tělesnou teplotou"
+        }
+      ];
+
+      results.innerHTML = "";
+      data.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "unit";
+        card.innerHTML = `
+          <div class="top">
+            <div class="symbol">${item.symbol}</div>
+            <div class="spoken">${item.spoken}</div>
+          </div>
+          <div>
+            <div class="value">${item.value}</div>
+            <div class="full">${item.full}</div>
+          </div>
+        `;
+        results.appendChild(card);
+      });
+
+      answerBox.innerHTML = `
+        <strong>Výsledek:</strong><br>
+        Zadaná teplota je <strong>${formatNumber(c,2)} °C</strong>.<br>
+        To odpovídá <strong>${formatNumber(f,2)} °F</strong> a <strong>${formatNumber(k,2)} K</strong>.<br><br>
+        <strong>Praktický význam:</strong><br>
+        ${getStateSentence(c)}<br><br>
+        <strong>Převodní příklad:</strong><br>
+        K = °C + 273,15 → ${formatNumber(c,2)} + 273,15 = ${formatNumber(k,2)} K
+      `;
+    }
+
+    function getStateText(c){
+      if(c < 0) return "mráz";
+      if(c < 10) return "chladno";
+      if(c < 30) return "příjemně";
+      if(c < 38) return "horko";
+      if(c < 41) return "horečka";
+      if(c < 99.5) return "velmi horké";
+      return "var";
+    }
+
+    function getWaterInfo(c){
+      if(c < 0) return "voda mrzne";
+      if(c === 0) return "bod mrazu";
+      if(c < 100) return "voda je tekutá";
+      if(c >= 100) return "voda se vaří";
+      return "—";
+    }
+
+    function getBodyInfo(c){
+      const diff = c - 36.6;
+      if(Math.abs(diff) < 0.2) return "normální teplota";
+      if(c < 35) return "nižší než teplota těla";
+      if(c < 38) return "podobná / vyšší než tělo";
+      return "horečka nebo více";
+    }
+
+    function getStateSentence(c){
+      if(c < 0) return "Je pod bodem mrazu. Venku bývá led a voda může zmrznout.";
+      if(c < 10) return "Je chladno. Hodí se teplejší oblečení.";
+      if(c < 30) return "Je to běžná nebo příjemná teplota pro každodenní život.";
+      if(c < 38) return "Je velké teplo. Musíme více pít a chránit se před horkem.";
+      if(c < 41) return "Taková teplota může znamenat horečku a nemoc.";
+      if(c < 99.5) return "Jde o velmi vysokou teplotu, pro člověka nebezpečnou.";
+      return "Tato teplota odpovídá bodu varu vody nebo vyšší teplotě.";
+    }
+
+    function updateAll(fromSlider = false){
+      const unit = unitSelect.value;
+      let c;
+
+      if(fromSlider){
+        c = parseFloat(tempSlider.value);
+        tempInput.value = formatNumber(fromCelsius(c, unit), 2).replace(",", ".");
+      } else {
+        c = toCelsius(tempInput.value, unit);
+      }
+
+      tempSlider.value = c;
+      sliderValue.textContent = formatNumber(c, 1) + " °C";
+
+      setThermometer(c);
+      updateVisual(c);
+      updateResults(c);
+
+      digitalDisplay.textContent = `${formatNumber(c,1)} °C  |  ${formatNumber(fromCelsius(c,"F"),1)} °F  |  ${formatNumber(fromCelsius(c,"K"),1)} K`;
+    }
+
+    tempInput.addEventListener("input", () => updateAll(false));
+    unitSelect.addEventListener("change", () => updateAll(false));
+    tempSlider.addEventListener("input", () => updateAll(true));
+
+    document.querySelectorAll("button[data-c]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        unitSelect.value = "C";
+        tempInput.value = btn.dataset.c;
+        updateAll(false);
+      });
+    });
+
+    createScale();
+    updateAll(false);
+  </script>
+</body>
+</html>
