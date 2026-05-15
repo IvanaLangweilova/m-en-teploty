@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Teplota – teploměr, převody a tělesná teplota</title>
+
   <style>
     :root{
       --bg1:#dbeafe;
@@ -25,13 +26,13 @@
     }
 
     .page{
-      max-width:1360px;
+      max-width:1380px;
       margin:0 auto;
       padding:24px;
     }
 
     header{
-      background:rgba(255,255,255,0.93);
+      background:rgba(255,255,255,0.94);
       border:2px solid rgba(255,255,255,0.95);
       box-shadow:0 18px 40px rgba(15,23,42,0.13);
       border-radius:28px;
@@ -64,7 +65,7 @@
 
     .grid{
       display:grid;
-      grid-template-columns: 1fr 1.2fr;
+      grid-template-columns: 1fr 1.22fr;
       gap:22px;
       align-items:start;
     }
@@ -472,7 +473,7 @@
 
     .temp-layout{
       display:grid;
-      grid-template-columns: 1fr 250px;
+      grid-template-columns: 1fr 255px;
       gap:18px;
       align-items:start;
       margin-top:8px;
@@ -526,6 +527,60 @@
       display:block;
     }
 
+    .boil-box{
+      margin-top:10px;
+      background:#fff;
+      border:2px solid #bfdbfe;
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .boil-readout{
+      margin-top:12px;
+      background:#020617;
+      color:#22c55e;
+      border-radius:16px;
+      padding:14px;
+      text-align:center;
+      font-size:22px;
+      font-weight:bold;
+    }
+
+    .boil-grid{
+      display:grid;
+      grid-template-columns: 1fr 190px;
+      gap:16px;
+      align-items:center;
+      margin-top:14px;
+    }
+
+    .boil-visual{
+      background:linear-gradient(180deg,#dbeafe,#fef3c7);
+      border:2px solid #bfdbfe;
+      border-radius:18px;
+      padding:14px;
+      text-align:center;
+      min-height:190px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .pot-svg{
+      width:100%;
+      max-width:180px;
+      height:auto;
+      display:block;
+      margin-bottom:8px;
+    }
+
+    .boil-small{
+      font-size:14px;
+      color:#475569;
+      line-height:1.45;
+    }
+
     footer{
       text-align:center;
       margin-top:18px;
@@ -537,12 +592,13 @@
       .grid{ grid-template-columns:1fr; }
       h1{ font-size:34px; }
       .results{ grid-template-columns:1fr; }
-      .input-row,.formula,.scene-area,.temp-layout{ grid-template-columns:1fr; }
+      .input-row,.formula,.scene-area,.temp-layout,.boil-grid{ grid-template-columns:1fr; }
       .thermo-box,.visual-box{ min-height:auto; }
       .patient-row{ grid-template-columns:1fr; }
     }
   </style>
 </head>
+
 <body>
   <div class="page">
     <header>
@@ -674,8 +730,8 @@
                 <li><strong>37,3–37,9 °C</strong> – zvýšená teplota.</li>
                 <li><strong>38,0–38,9 °C</strong> – horečka.</li>
                 <li><strong>39,0–40,0 °C</strong> – vysoká horečka.</li>
-                <li><strong>nad 40,0 °C</strong> – velmi nebezpečný stav.</li>
-                <li><strong>kolem 42 °C</strong> – kritická teplota, může dojít k ohrožení života.</li>
+                <li><strong>40,1–41,9 °C</strong> – velmi nebezpečný stav.</li>
+                <li><strong>od 42 °C</strong> – kritický stav, v této aplikaci zobrazen jako smrtelný stav.</li>
               </ul>
             </div>
 
@@ -684,18 +740,28 @@
 
               <div class="patient-row">
                 <svg class="child-head-svg" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
-                  <circle id="faceCircle" cx="90" cy="95" r="55" fill="#fde68a"/>
+                  <circle id="faceCircle" cx="90" cy="96" r="55" fill="#fde68a"/>
 
-                  <path d="M38 80 Q52 28 105 28 Q142 32 145 82 Q130 55 103 52 Q74 49 38 80 Z" fill="#8b5cf6"/>
+                  <g id="hairGroup">
+                    <path d="M40 86 Q48 42 87 34 Q120 28 142 52 Q152 63 150 82
+                             Q136 69 120 66 Q103 62 87 65 Q62 69 40 86 Z"
+                          fill="#7c3aed"/>
+                    <path d="M63 59 Q73 47 85 52" stroke="#6d28d9" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <path d="M88 49 Q98 41 109 49" stroke="#6d28d9" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <path d="M112 52 Q121 45 130 54" stroke="#6d28d9" stroke-width="4" fill="none" stroke-linecap="round"/>
+                  </g>
 
-                  <circle id="cheekLeft" cx="64" cy="112" r="6" fill="#fca5a5" opacity="0.7"/>
-                  <circle id="cheekRight" cx="116" cy="112" r="6" fill="#fca5a5" opacity="0.7"/>
+                  <circle id="cheekLeft" cx="63" cy="114" r="6" fill="#fca5a5" opacity="0.7"/>
+                  <circle id="cheekRight" cx="117" cy="114" r="6" fill="#fca5a5" opacity="0.7"/>
 
-                  <ellipse cx="72" cy="92" rx="10" ry="8" fill="white"/>
-                  <ellipse cx="108" cy="92" rx="10" ry="8" fill="white"/>
+                  <ellipse id="eyeWhiteLeft" cx="72" cy="92" rx="10" ry="8" fill="white"/>
+                  <ellipse id="eyeWhiteRight" cx="108" cy="92" rx="10" ry="8" fill="white"/>
 
                   <circle id="pupilLeft" cx="72" cy="92" r="3.5" fill="#0f172a"/>
                   <circle id="pupilRight" cx="108" cy="92" r="3.5" fill="#0f172a"/>
+
+                  <path id="closedEyeLeft" d="M64 92 Q72 98 80 92" stroke="#0f172a" stroke-width="3" fill="none" style="display:none;"/>
+                  <path id="closedEyeRight" d="M100 92 Q108 98 116 92" stroke="#0f172a" stroke-width="3" fill="none" style="display:none;"/>
 
                   <line id="browLeft" x1="62" y1="78" x2="80" y2="82" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
                   <line id="browRight" x1="100" y1="82" x2="118" y2="78" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
@@ -708,12 +774,13 @@
                         fill="#fb7185" style="display:none;"></path>
 
                   <text id="coldMark" x="90" y="24" text-anchor="middle" font-size="22" style="display:none;">❄️</text>
+                  <text id="deathCross" x="156" y="58" text-anchor="middle" font-size="26" fill="#000000" font-weight="bold" style="display:none;">✖</text>
                 </svg>
 
                 <svg class="thermo-side-svg" viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
                   <rect x="48" y="20" width="24" height="140" rx="12" fill="#f8fafc" stroke="#334155" stroke-width="4"/>
-                  <rect id="miniMercury" x="52" y="50" width="16" height="106" rx="8" fill="#f59e0b"/>
-                  <circle id="miniBulb" cx="60" cy="176" r="24" fill="#f59e0b" stroke="#334155" stroke-width="4"/>
+                  <rect id="miniMercury" x="52" y="50" width="16" height="106" rx="8" fill="#22c55e"/>
+                  <circle id="miniBulb" cx="60" cy="176" r="24" fill="#22c55e" stroke="#334155" stroke-width="4"/>
 
                   <line x1="78" y1="35" x2="95" y2="35" stroke="#334155" stroke-width="2"/>
                   <line x1="78" y1="65" x2="95" y2="65" stroke="#334155" stroke-width="2"/>
@@ -731,6 +798,53 @@
             <strong>Kdy volat lékaře nebo rychlou pomoc:</strong><br>
             Pokud má člověk velmi vysokou teplotu, špatně dýchá, je zmatený, nereaguje,
             omdlévá, má křeče nebo se jeho stav rychle zhoršuje, je nutné ihned vyhledat pomoc.
+          </div>
+        </div>
+
+        <div class="exampleBox">
+          <strong>Bod varu vody a nadmořská výška:</strong><br>
+          Voda běžně vře při <strong>100 °C</strong>, ale to platí hlavně u hladiny moře.
+          Ve vyšší nadmořské výšce je nižší tlak vzduchu, a proto voda vře při nižší teplotě.
+          Pro žáky můžeme použít jednoduché pravidlo: <strong>přibližně každých 300 m klesne bod varu asi o 1 °C</strong>.
+
+          <div class="boil-box">
+            <label for="altitudeSlider">Nadmořská výška:</label>
+            <div class="slider-label">
+              <span>Výška místa</span>
+              <span id="altitudeValue">0 m n. m.</span>
+            </div>
+
+            <input id="altitudeSlider" type="range" min="0" max="9000" step="10" value="0" />
+
+            <div class="boil-grid">
+              <div class="boil-readout" id="boilingDisplay">Bod varu vody: 100,0 °C</div>
+
+              <div class="boil-visual">
+                <svg class="pot-svg" viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M80 45 Q65 25 82 10" stroke="#94a3b8" stroke-width="5" fill="none" stroke-linecap="round"/>
+                  <path d="M110 48 Q95 25 112 8" stroke="#94a3b8" stroke-width="5" fill="none" stroke-linecap="round"/>
+                  <path d="M140 45 Q125 25 142 10" stroke="#94a3b8" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+                  <ellipse cx="110" cy="70" rx="72" ry="16" fill="#cbd5e1" stroke="#475569" stroke-width="4"/>
+                  <circle cx="110" cy="51" r="9" fill="#64748b"/>
+
+                  <rect x="45" y="70" width="130" height="68" rx="16" fill="#e2e8f0" stroke="#475569" stroke-width="4"/>
+
+                  <path d="M55 88 Q85 98 110 88 Q140 78 165 88 L165 126 L55 126 Z"
+                        fill="#38bdf8" opacity="0.85"/>
+
+                  <path d="M45 92 Q20 92 25 115 Q28 132 47 125" fill="none" stroke="#475569" stroke-width="6" stroke-linecap="round"/>
+                  <path d="M175 92 Q200 92 195 115 Q192 132 173 125" fill="none" stroke="#475569" stroke-width="6" stroke-linecap="round"/>
+
+                  <rect x="58" y="142" width="104" height="12" rx="6" fill="#334155"/>
+                </svg>
+
+                <div><strong id="boilPlace">Hladina moře</strong></div>
+                <div class="boil-small" id="boilDesc">
+                  U hladiny moře voda vře přibližně při 100 °C.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -789,10 +903,21 @@
     const mouthOpen = document.getElementById("mouthOpen");
     const tongue = document.getElementById("tongue");
     const coldMark = document.getElementById("coldMark");
+    const deathCross = document.getElementById("deathCross");
+    const eyeWhiteLeft = document.getElementById("eyeWhiteLeft");
+    const eyeWhiteRight = document.getElementById("eyeWhiteRight");
+    const closedEyeLeft = document.getElementById("closedEyeLeft");
+    const closedEyeRight = document.getElementById("closedEyeRight");
 
     const miniMercury = document.getElementById("miniMercury");
     const miniBulb = document.getElementById("miniBulb");
     const thermoLabel = document.getElementById("thermoLabel");
+
+    const altitudeSlider = document.getElementById("altitudeSlider");
+    const altitudeValue = document.getElementById("altitudeValue");
+    const boilingDisplay = document.getElementById("boilingDisplay");
+    const boilPlace = document.getElementById("boilPlace");
+    const boilDesc = document.getElementById("boilDesc");
 
     function formatNumber(n, maxDecimals = 2){
       return new Intl.NumberFormat("cs-CZ", {
@@ -808,6 +933,7 @@
       if(unit === "C") return value;
       if(unit === "F") return (value - 32) * 5/9;
       if(unit === "K") return value - 273.15;
+
       return value;
     }
 
@@ -815,19 +941,24 @@
       if(unit === "C") return c;
       if(unit === "F") return c * 9/5 + 32;
       if(unit === "K") return c + 273.15;
+
       return c;
     }
 
     function createScale(){
       const scale = document.getElementById("scale");
       const marks = [-20,0,20,40,60,80,100,120];
+
       scale.innerHTML = "";
+
       marks.forEach(v => {
         const mark = document.createElement("div");
         mark.className = "mark";
+
         const percent = (v - (-30)) / (120 - (-30)) * 100;
         mark.style.bottom = percent + "%";
         mark.innerHTML = `<span>${v}°C</span>`;
+
         scale.appendChild(mark);
       });
     }
@@ -835,6 +966,7 @@
     function setThermometer(c){
       let percent = (c - (-30)) / (120 - (-30)) * 100;
       percent = Math.max(0, Math.min(100, percent));
+
       mercury.style.height = percent + "%";
 
       let colorTop = "#93c5fd";
@@ -861,7 +993,8 @@
       if(c < 30) return "příjemně";
       if(c < 38) return "horko";
       if(c < 41) return "horečka";
-      if(c < 99.5) return "velmi horké";
+      if(c < 100) return "velmi horké";
+
       return "var";
     }
 
@@ -870,6 +1003,7 @@
       if(c === 0) return "bod mrazu";
       if(c < 100) return "voda je tekutá";
       if(c >= 100) return "voda se vaří";
+
       return "—";
     }
 
@@ -879,7 +1013,9 @@
       if(c < 38) return "zvýšená teplota";
       if(c < 39) return "horečka";
       if(c < 40.1) return "vysoká horečka";
-      return "velmi nebezpečné";
+      if(c < 42) return "kritický stav";
+
+      return "smrtelný stav (vizualizace)";
     }
 
     function getStateSentence(c){
@@ -888,7 +1024,9 @@
       if(c < 30) return "Je to běžná nebo příjemná teplota pro každodenní život.";
       if(c < 38) return "Je velké teplo. Musíme více pít a chránit se před horkem.";
       if(c < 41) return "Taková teplota může znamenat horečku a nemoc.";
-      if(c < 99.5) return "Jde o velmi vysokou teplotu, pro člověka nebezpečnou.";
+      if(c < 42) return "Jde o velmi vysokou a nebezpečnou tělesnou teplotu.";
+      if(c < 100) return "Tato teplota je v aplikaci zobrazena jako kritický, smrtelný stav.";
+
       return "Tato teplota odpovídá bodu varu vody nebo vyšší teplotě.";
     }
 
@@ -923,7 +1061,7 @@
         desc = "Taková teplota může znamenat horečku. Je vhodné odpočívat, pít a sledovat zdravotní stav.";
         badge = "Nemoc / horečka";
         emoji = "🤒";
-      } else if(c < 99.5){
+      } else if(c < 100){
         title = "Velmi vysoká teplota";
         desc = "Takto vysoká teplota je velmi nebezpečná a je potřeba rychle vyhledat pomoc.";
         badge = "Nebezpečný stav";
@@ -947,9 +1085,18 @@
       let thermoColor = "#22c55e";
 
       coldMark.style.display = "none";
+      deathCross.style.display = "none";
+
       mouthLine.style.display = "block";
       mouthOpen.style.display = "none";
       tongue.style.display = "none";
+
+      eyeWhiteLeft.style.display = "block";
+      eyeWhiteRight.style.display = "block";
+      pupilLeft.style.display = "block";
+      pupilRight.style.display = "block";
+      closedEyeLeft.style.display = "none";
+      closedEyeRight.style.display = "none";
 
       pupilLeft.setAttribute("cy", "92");
       pupilRight.setAttribute("cy", "92");
@@ -984,12 +1131,14 @@
         browRight.setAttribute("x2", "118");
         browRight.setAttribute("y2", "84");
       }
+
       else if(c >= 35 && c < 37.3){
         faceColor = "#fde68a";
         cheekColor = "#fca5a5";
         thermoColor = "#22c55e";
         mouthLine.setAttribute("d", "M72 128 Q90 140 108 128");
       }
+
       else if(c >= 37.3 && c < 40){
         faceColor = "#fca5a5";
         cheekColor = "#ef4444";
@@ -1007,7 +1156,8 @@
         browRight.setAttribute("x2", "118");
         browRight.setAttribute("y2", "82");
       }
-      else{
+
+      else if(c >= 40 && c < 42){
         faceColor = "#ef4444";
         cheekColor = "#dc2626";
         thermoColor = "#dc2626";
@@ -1028,6 +1178,37 @@
         browRight.setAttribute("y1", "76");
         browRight.setAttribute("x2", "118");
         browRight.setAttribute("y2", "80");
+      }
+
+      else{
+        faceColor = "#d1d5db";
+        cheekColor = "#9ca3af";
+        thermoColor = "#111827";
+
+        deathCross.style.display = "block";
+
+        pupilLeft.style.display = "none";
+        pupilRight.style.display = "none";
+        eyeWhiteLeft.style.display = "none";
+        eyeWhiteRight.style.display = "none";
+        closedEyeLeft.style.display = "block";
+        closedEyeRight.style.display = "block";
+
+        mouthLine.style.display = "block";
+        mouthLine.setAttribute("d", "M74 132 Q90 135 106 132");
+
+        mouthOpen.style.display = "none";
+        tongue.style.display = "none";
+
+        browLeft.setAttribute("x1", "64");
+        browLeft.setAttribute("y1", "78");
+        browLeft.setAttribute("x2", "78");
+        browLeft.setAttribute("y2", "78");
+
+        browRight.setAttribute("x1", "102");
+        browRight.setAttribute("y1", "78");
+        browRight.setAttribute("x2", "116");
+        browRight.setAttribute("y2", "78");
       }
 
       faceCircle.setAttribute("fill", faceColor);
@@ -1083,19 +1264,23 @@
       ];
 
       results.innerHTML = "";
+
       data.forEach(item => {
         const card = document.createElement("div");
         card.className = "unit";
+
         card.innerHTML = `
           <div class="top">
             <div class="symbol">${item.symbol}</div>
             <div class="spoken">${item.spoken}</div>
           </div>
+
           <div>
             <div class="value">${item.value}</div>
             <div class="full">${item.full}</div>
           </div>
         `;
+
         results.appendChild(card);
       });
 
@@ -1103,11 +1288,43 @@
         <strong>Výsledek:</strong><br>
         Zadaná teplota je <strong>${formatNumber(c,2)} °C</strong>.<br>
         To odpovídá <strong>${formatNumber(f,2)} °F</strong> a <strong>${formatNumber(k,2)} K</strong>.<br><br>
+
         <strong>Praktický význam:</strong><br>
         ${getStateSentence(c)}<br><br>
+
         <strong>Převodní příklad:</strong><br>
         K = °C + 273,15 → ${formatNumber(c,2)} + 273,15 = ${formatNumber(k,2)} K
       `;
+    }
+
+    function updateBoilingPoint(){
+      const altitude = parseFloat(altitudeSlider.value);
+
+      let boilingPoint = 100 - altitude / 300;
+      boilingPoint = Math.max(65, boilingPoint);
+
+      altitudeValue.textContent = `${formatNumber(altitude,0)} m n. m.`;
+      boilingDisplay.textContent = `Bod varu vody: ${formatNumber(boilingPoint,1)} °C`;
+
+      if(altitude < 300){
+        boilPlace.textContent = "Hladina moře";
+        boilDesc.textContent = "U hladiny moře voda vře přibližně při 100 °C.";
+      }
+
+      else if(altitude < 1500){
+        boilPlace.textContent = "Vyšší krajina";
+        boilDesc.textContent = "Ve vyšší nadmořské výšce je nižší tlak, a voda proto vře při nižší teplotě.";
+      }
+
+      else if(altitude < 4000){
+        boilPlace.textContent = "Hory";
+        boilDesc.textContent = "Na horách může voda vřít už přibližně při 93–97 °C.";
+      }
+
+      else{
+        boilPlace.textContent = "Velmi vysoké hory";
+        boilDesc.textContent = "Ve velmi vysokých horách je bod varu vody výrazně nižší.";
+      }
     }
 
     function updateAll(fromSlider = false){
@@ -1136,6 +1353,7 @@
     tempInput.addEventListener("input", () => updateAll(false));
     unitSelect.addEventListener("change", () => updateAll(false));
     tempSlider.addEventListener("input", () => updateAll(true));
+    altitudeSlider.addEventListener("input", updateBoilingPoint);
 
     document.querySelectorAll("button[data-c]").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -1147,6 +1365,7 @@
 
     createScale();
     updateAll(false);
+    updateBoilingPoint();
   </script>
 </body>
 </html>
