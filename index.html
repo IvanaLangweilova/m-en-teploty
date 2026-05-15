@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teplota – převody a teploměr</title>
+  <title>Teplota – teploměr, převody a tělesná teplota</title>
   <style>
     :root{
       --bg1:#dbeafe;
@@ -25,13 +25,13 @@
     }
 
     .page{
-      max-width:1320px;
+      max-width:1360px;
       margin:0 auto;
       padding:24px;
     }
 
     header{
-      background:rgba(255,255,255,0.92);
+      background:rgba(255,255,255,0.93);
       border:2px solid rgba(255,255,255,0.95);
       box-shadow:0 18px 40px rgba(15,23,42,0.13);
       border-radius:28px;
@@ -51,7 +51,7 @@
       font-size:18px;
       line-height:1.55;
       color:var(--muted);
-      max-width:1050px;
+      max-width:1080px;
       margin:0 auto;
     }
 
@@ -70,7 +70,7 @@
     }
 
     .card{
-      background:rgba(255,255,255,0.94);
+      background:rgba(255,255,255,0.95);
       border-radius:26px;
       padding:22px;
       box-shadow:0 18px 35px rgba(15,23,42,0.12);
@@ -101,9 +101,9 @@
 
     .scene-area{
       display:grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 260px 1fr;
       gap:18px;
-      align-items:center;
+      align-items:stretch;
     }
 
     .thermo-box{
@@ -111,7 +111,7 @@
       border:2px solid #fecaca;
       border-radius:22px;
       padding:18px;
-      min-height:400px;
+      min-height:430px;
       display:flex;
       justify-content:center;
       align-items:center;
@@ -119,8 +119,8 @@
 
     .thermometer{
       position:relative;
-      width:120px;
-      height:320px;
+      width:140px;
+      height:340px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -128,10 +128,10 @@
 
     .tube{
       position:absolute;
-      width:34px;
-      height:240px;
-      left:43px;
-      top:20px;
+      width:38px;
+      height:255px;
+      left:51px;
+      top:18px;
       border-radius:22px;
       background:#f8fafc;
       border:4px solid #334155;
@@ -150,9 +150,9 @@
 
     .bulb{
       position:absolute;
-      width:86px;
-      height:86px;
-      left:17px;
+      width:92px;
+      height:92px;
+      left:24px;
       bottom:0;
       border-radius:50%;
       background:linear-gradient(180deg,#fca5a5,#dc2626);
@@ -163,20 +163,20 @@
     .tube-core{
       position:absolute;
       width:14px;
-      left:53px;
+      left:63px;
       top:34px;
-      height:214px;
+      height:220px;
       border-radius:20px;
-      background:rgba(255,255,255,0.4);
+      background:rgba(255,255,255,0.35);
       pointer-events:none;
     }
 
     .scale{
       position:absolute;
-      right:-36px;
-      top:18px;
-      height:245px;
-      width:60px;
+      right:-42px;
+      top:16px;
+      height:260px;
+      width:72px;
     }
 
     .mark{
@@ -191,14 +191,14 @@
       position:absolute;
       left:0;
       top:-1px;
-      width:18px;
+      width:20px;
       height:2px;
       background:#334155;
     }
 
     .mark span{
       position:absolute;
-      left:24px;
+      left:28px;
       top:-8px;
       font-size:12px;
       font-weight:bold;
@@ -206,23 +206,23 @@
     }
 
     .visual-box{
-      min-height:400px;
+      min-height:430px;
       background:linear-gradient(180deg,#dbeafe,#fefce8);
       border:2px solid #bfdbfe;
       border-radius:22px;
-      padding:16px;
+      padding:18px;
       display:flex;
       flex-direction:column;
-      justify-content:center;
       align-items:center;
+      justify-content:flex-start;
       text-align:center;
     }
 
-    .emoji-big{
-      font-size:92px;
-      line-height:1;
-      margin-bottom:12px;
-      transition:.3s ease;
+    .child-svg{
+      width:100%;
+      max-width:330px;
+      height:auto;
+      margin-bottom:10px;
     }
 
     .visual-title{
@@ -366,7 +366,7 @@
       border-radius:18px;
       padding:15px;
       color:white;
-      min-height:100px;
+      min-height:110px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
@@ -462,6 +462,26 @@
       line-height:1.5;
     }
 
+    .temp-list{
+      margin:10px 0 0 0;
+      padding-left:18px;
+    }
+
+    .temp-list li{
+      margin-bottom:8px;
+    }
+
+    .warning{
+      margin-top:14px;
+      background:#fef2f2;
+      border:2px solid #fecaca;
+      border-radius:18px;
+      padding:14px;
+      font-size:15px;
+      line-height:1.5;
+      color:#7f1d1d;
+    }
+
     footer{
       text-align:center;
       margin-top:18px;
@@ -469,11 +489,12 @@
       font-size:14px;
     }
 
-    @media (max-width:1020px){
+    @media (max-width:1100px){
       .grid{ grid-template-columns:1fr; }
       h1{ font-size:34px; }
       .results{ grid-template-columns:1fr; }
       .input-row,.formula,.scene-area{ grid-template-columns:1fr; }
+      .thermo-box,.visual-box{ min-height:auto; }
     }
   </style>
 </head>
@@ -514,12 +535,42 @@
             </div>
 
             <div class="visual-box">
-              <div class="emoji-big" id="emojiBig">🌡️</div>
-              <div class="visual-title" id="visualTitle">Mírná teplota</div>
+              <svg class="child-svg" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="75" cy="45" r="22" fill="#fcd34d"/>
+                <circle cx="75" cy="45" r="34" fill="none" stroke="#fbbf24" stroke-width="5"/>
+                <g stroke="#fbbf24" stroke-width="4" stroke-linecap="round">
+                  <line x1="75" y1="6" x2="75" y2="0"/>
+                  <line x1="75" y1="90" x2="75" y2="96"/>
+                  <line x1="36" y1="45" x2="30" y2="45"/>
+                  <line x1="114" y1="45" x2="120" y2="45"/>
+                  <line x1="48" y1="18" x2="43" y2="13"/>
+                  <line x1="102" y1="72" x2="107" y2="77"/>
+                  <line x1="48" y1="72" x2="43" y2="77"/>
+                  <line x1="102" y1="18" x2="107" y2="13"/>
+                </g>
+                <circle cx="68" cy="39" r="3" fill="#7c2d12"/>
+                <circle cx="82" cy="39" r="3" fill="#7c2d12"/>
+                <path d="M67 51 Q75 58 83 51" stroke="#7c2d12" stroke-width="3" fill="none"/>
+
+                <circle cx="180" cy="86" r="42" fill="#fde68a"/>
+                <path d="M145 76 Q180 32 215 76" fill="#7c3aed"/>
+                <circle cx="166" cy="82" r="4" fill="#0f172a"/>
+                <circle cx="194" cy="82" r="4" fill="#0f172a"/>
+                <path d="M168 99 Q180 109 192 99" stroke="#0f172a" stroke-width="3" fill="none"/>
+                <rect x="191" y="96" width="52" height="8" rx="4" fill="#cbd5e1" stroke="#64748b" stroke-width="1.5"/>
+                <rect x="235" y="97.5" width="8" height="5" rx="2" fill="#ef4444"/>
+                <rect x="145" y="128" width="70" height="58" rx="18" fill="#60a5fa"/>
+                <rect x="145" y="183" width="24" height="42" rx="10" fill="#fde68a"/>
+                <rect x="191" y="183" width="24" height="42" rx="10" fill="#fde68a"/>
+                <rect x="128" y="136" width="22" height="50" rx="10" fill="#fde68a"/>
+                <rect x="210" y="136" width="22" height="50" rx="10" fill="#fde68a"/>
+              </svg>
+
+              <div class="visual-title" id="visualTitle">Příjemná teplota</div>
               <div class="visual-desc" id="visualDesc">
-                Běžná pokojová teplota. Není ani velké chladno, ani horko.
+                Běžná pokojová nebo příjemná teplota. Venku ani doma není příliš zima ani horko.
               </div>
-              <div class="badge" id="stateBadge">Pokoj / běžné prostředí</div>
+              <div class="badge" id="stateBadge">Běžná teplota</div>
 
               <div class="display" id="digitalDisplay" style="margin-top:18px; width:100%;">
                 20,0 °C
@@ -553,8 +604,8 @@
           </div>
 
           <div class="hint">
-            Zadej teplotu číslem nebo použij posuvník. Aplikace ti ji převede do dalších jednotek
-            a zároveň ukáže, co taková teplota znamená v praxi.
+            Zadej teplotu číslem nebo použij posuvník. Aplikace ti teplotu převede do dalších jednotek
+            a zároveň ukáže, co taková teplota znamená v běžném životě.
           </div>
 
           <div class="quick">
@@ -562,6 +613,7 @@
             <button data-c="0">0 °C</button>
             <button data-c="20">20 °C</button>
             <button data-c="36.6">36,6 °C</button>
+            <button data-c="37.5">37,5 °C</button>
             <button data-c="39">39 °C</button>
             <button data-c="100">100 °C</button>
           </div>
@@ -587,9 +639,29 @@
         <div class="exampleBox">
           <strong>Příklady pro žáky:</strong><br>
           - <strong>0 °C</strong> – voda začíná mrznout.<br>
+          - <strong>20 °C</strong> – příjemná pokojová teplota.<br>
           - <strong>36,6 °C</strong> – přibližná normální tělesná teplota člověka.<br>
-          - <strong>39 °C</strong> – horečka, nemocné dítě by mělo odpočívat a je vhodné měřit teplotu.<br>
+          - <strong>39 °C</strong> – vysoká horečka.<br>
           - <strong>100 °C</strong> – voda se vaří.
+        </div>
+
+        <div class="exampleBox">
+          <strong>Tělesná teplota člověka:</strong>
+          <ul class="temp-list">
+            <li><strong>pod 35,0 °C</strong> – podchlazení, tělo je příliš studené.</li>
+            <li><strong>36,0–37,2 °C</strong> – běžná nebo normální tělesná teplota.</li>
+            <li><strong>37,3–37,9 °C</strong> – zvýšená teplota.</li>
+            <li><strong>38,0–38,9 °C</strong> – horečka.</li>
+            <li><strong>39,0–40,0 °C</strong> – vysoká horečka.</li>
+            <li><strong>nad 40,0 °C</strong> – velmi nebezpečný stav.</li>
+            <li><strong>kolem 42 °C</strong> – kritická teplota, může dojít k ohrožení života.</li>
+          </ul>
+
+          <div class="warning">
+            <strong>Kdy volat lékaře nebo rychlou pomoc:</strong><br>
+            Pokud má člověk velmi vysokou teplotu, špatně dýchá, je zmatený, nereaguje,
+            omdlévá, má křeče nebo se jeho stav rychle zhoršuje, je nutné ihned vyhledat pomoc.
+          </div>
         </div>
 
         <div class="exampleBox">
@@ -628,7 +700,6 @@
     const bulb = document.getElementById("bulb");
     const digitalDisplay = document.getElementById("digitalDisplay");
 
-    const emojiBig = document.getElementById("emojiBig");
     const visualTitle = document.getElementById("visualTitle");
     const visualDesc = document.getElementById("visualDesc");
     const stateBadge = document.getElementById("stateBadge");
@@ -697,52 +768,78 @@
       bulb.style.background = `linear-gradient(180deg, ${colorTop}, ${colorBottom})`;
     }
 
+    function getStateText(c){
+      if(c < 0) return "mráz";
+      if(c < 10) return "chladno";
+      if(c < 30) return "příjemně";
+      if(c < 38) return "horko";
+      if(c < 41) return "horečka";
+      if(c < 99.5) return "velmi horké";
+      return "var";
+    }
+
+    function getWaterInfo(c){
+      if(c < 0) return "voda mrzne";
+      if(c === 0) return "bod mrazu";
+      if(c < 100) return "voda je tekutá";
+      if(c >= 100) return "voda se vaří";
+      return "—";
+    }
+
+    function getBodyInfo(c){
+      if(c < 35) return "podchlazení";
+      if(c < 37.3) return "normální teplota";
+      if(c < 38) return "zvýšená teplota";
+      if(c < 39) return "horečka";
+      if(c < 40.1) return "vysoká horečka";
+      return "velmi nebezpečné";
+    }
+
+    function getStateSentence(c){
+      if(c < 0) return "Je pod bodem mrazu. Venku bývá led a voda může zmrznout.";
+      if(c < 10) return "Je chladno. Hodí se teplejší oblečení.";
+      if(c < 30) return "Je to běžná nebo příjemná teplota pro každodenní život.";
+      if(c < 38) return "Je velké teplo. Musíme více pít a chránit se před horkem.";
+      if(c < 41) return "Taková teplota může znamenat horečku a nemoc.";
+      if(c < 99.5) return "Jde o velmi vysokou teplotu, pro člověka nebezpečnou.";
+      return "Tato teplota odpovídá bodu varu vody nebo vyšší teplotě.";
+    }
+
     function updateVisual(c){
-      let emoji = "🙂";
-      let title = "Mírná teplota";
-      let desc = "Běžná pokojová teplota. Není ani velké chladno, ani horko.";
-      let badge = "Pokoj / běžné prostředí";
+      let title = "Příjemná teplota";
+      let desc = "Běžná pokojová nebo příjemná teplota. Venku ani doma není příliš zima ani horko.";
+      let badge = "Běžná teplota";
 
       if(c < 0){
-        emoji = "❄️";
         title = "Mrzne";
-        desc = "Je pod bodem mrazu. Voda může zamrzat, venku bývá led a sníh.";
+        desc = "Je pod bodem mrazu. Voda může zamrzat a venku bývá led nebo sníh.";
         badge = "Zima / mráz";
       } else if(c < 10){
-        emoji = "🧥";
         title = "Chladno";
         desc = "Je chladnější počasí. Hodí se bunda nebo svetr.";
         badge = "Chladné počasí";
       } else if(c < 30){
-        emoji = "🌤️";
         title = "Příjemná teplota";
-        desc = "Příjemná teplota pro běžný den, pobyt venku i doma.";
+        desc = "Je to příjemná teplota pro běžný den doma i venku.";
         badge = "Běžný den";
       } else if(c < 38){
-        emoji = "☀️";
         title = "Horko";
         desc = "Je opravdu teplo. Je důležité pít dostatek tekutin a chránit se před sluncem.";
         badge = "Horký den";
       } else if(c < 41){
-        emoji = "🤒";
-        title = "Horečka";
-        desc = "Tato teplota může znamenat nemoc. U dítěte nebo dospělého je vhodné odpočinek a sledování zdravotního stavu.";
-        badge = "Nemocné dítě / horečka";
-      } else {
-        emoji = "🔥";
+        title = "Nemocné dítě / horečka";
+        desc = "Taková teplota může znamenat horečku. Je vhodné odpočívat, pít a sledovat zdravotní stav.";
+        badge = "Horečka";
+      } else if(c < 99.5){
         title = "Velmi vysoká teplota";
-        desc = "Takto vysoká teplota je nebezpečná pro člověka. U kapalin nebo předmětů může znamenat silné zahřátí.";
-        badge = "Velmi vysoká teplota";
-      }
-
-      if(c >= 99.5){
-        emoji = "💧♨️";
+        desc = "Takto vysoká teplota je velmi nebezpečná a je potřeba rychle vyhledat pomoc.";
+        badge = "Nebezpečný stav";
+      } else {
         title = "Voda se vaří";
-        desc = "Při přibližně 100 °C se voda vaří. To využíváme při vaření nebo v laboratoři.";
+        desc = "Při přibližně 100 °C se voda vaří. To využíváme při vaření i v laboratoři.";
         badge = "Bod varu vody";
       }
 
-      emojiBig.textContent = emoji;
       visualTitle.textContent = title;
       visualDesc.textContent = desc;
       stateBadge.textContent = badge;
@@ -819,49 +916,13 @@
       `;
     }
 
-    function getStateText(c){
-      if(c < 0) return "mráz";
-      if(c < 10) return "chladno";
-      if(c < 30) return "příjemně";
-      if(c < 38) return "horko";
-      if(c < 41) return "horečka";
-      if(c < 99.5) return "velmi horké";
-      return "var";
-    }
-
-    function getWaterInfo(c){
-      if(c < 0) return "voda mrzne";
-      if(c === 0) return "bod mrazu";
-      if(c < 100) return "voda je tekutá";
-      if(c >= 100) return "voda se vaří";
-      return "—";
-    }
-
-    function getBodyInfo(c){
-      const diff = c - 36.6;
-      if(Math.abs(diff) < 0.2) return "normální teplota";
-      if(c < 35) return "nižší než teplota těla";
-      if(c < 38) return "podobná / vyšší než tělo";
-      return "horečka nebo více";
-    }
-
-    function getStateSentence(c){
-      if(c < 0) return "Je pod bodem mrazu. Venku bývá led a voda může zmrznout.";
-      if(c < 10) return "Je chladno. Hodí se teplejší oblečení.";
-      if(c < 30) return "Je to běžná nebo příjemná teplota pro každodenní život.";
-      if(c < 38) return "Je velké teplo. Musíme více pít a chránit se před horkem.";
-      if(c < 41) return "Taková teplota může znamenat horečku a nemoc.";
-      if(c < 99.5) return "Jde o velmi vysokou teplotu, pro člověka nebezpečnou.";
-      return "Tato teplota odpovídá bodu varu vody nebo vyšší teplotě.";
-    }
-
     function updateAll(fromSlider = false){
       const unit = unitSelect.value;
       let c;
 
       if(fromSlider){
         c = parseFloat(tempSlider.value);
-        tempInput.value = formatNumber(fromCelsius(c, unit), 2).replace(",", ".");
+        tempInput.value = fromCelsius(c, unit).toFixed(2);
       } else {
         c = toCelsius(tempInput.value, unit);
       }
