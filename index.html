@@ -472,7 +472,7 @@
 
     .temp-layout{
       display:grid;
-      grid-template-columns: 1fr 230px;
+      grid-template-columns: 1fr 250px;
       gap:18px;
       align-items:start;
       margin-top:8px;
@@ -512,7 +512,15 @@
       color:#991b1b;
     }
 
-    .child-head-svg{
+    .patient-row{
+      display:grid;
+      grid-template-columns: 1fr 95px;
+      gap:10px;
+      align-items:center;
+    }
+
+    .child-head-svg,
+    .thermo-side-svg{
       width:100%;
       height:auto;
       display:block;
@@ -531,6 +539,7 @@
       .results{ grid-template-columns:1fr; }
       .input-row,.formula,.scene-area,.temp-layout{ grid-template-columns:1fr; }
       .thermo-box,.visual-box{ min-height:auto; }
+      .patient-row{ grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -540,13 +549,13 @@
       <h1>TEPLOTA</h1>
       <p class="subtitle">
         Teplota nám říká, jak moc je něco teplé nebo studené. Měříme ji teploměrem.
-        Teplotu používáme při měření počasí, tělesné teploty, při vaření, v lednici, v nemocnici,
-        v laboratoři i v běžném životě doma.
+        Teplotu používáme při měření počasí, tělesné teploty, při vaření, v lednici,
+        v nemocnici, v laboratoři i v běžném životě doma.
       </p>
       <p class="subtitle" style="margin-top:10px;">
-        <strong>K čemu je to dobré?</strong> Když umíš pracovat s teplotou, poznáš, jestli má někdo horečku,
-        jaké je venku počasí, kdy voda mrzne nebo se vaří, jak správně nastavit topení
-        a jak převádět teplotu mezi různými jednotkami.
+        <strong>K čemu je to dobré?</strong> Když umíš pracovat s teplotou, poznáš,
+        jestli má někdo horečku, jaké je venku počasí, kdy voda mrzne nebo se vaří,
+        jak správně nastavit topení a jak převádět teplotu mezi různými jednotkami.
       </p>
       <div class="author">Autorka: Mgr. Ivana Langweilová</div>
     </header>
@@ -672,21 +681,49 @@
 
             <div class="child-head-box">
               <h4>Měření tělesné teploty</h4>
-              <svg class="child-head-svg" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="110" cy="95" r="58" fill="#fde68a"/>
-                <path d="M58 78 Q110 20 162 78" fill="#8b5cf6"/>
-                <circle cx="92" cy="92" r="4" fill="#0f172a"/>
-                <circle cx="128" cy="92" r="4" fill="#0f172a"/>
-                <path d="M95 118 Q110 128 125 118" stroke="#0f172a" stroke-width="3" fill="none"/>
-                <circle cx="82" cy="107" r="5" fill="#fca5a5"/>
-                <circle cx="138" cy="107" r="5" fill="#fca5a5"/>
 
-                <rect x="118" y="114" width="60" height="10" rx="5" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
-                <rect x="165" y="116.5" width="10" height="5" rx="2" fill="#ef4444"/>
-                <rect x="124" y="117" width="22" height="4" rx="2" fill="#94a3b8"/>
+              <div class="patient-row">
+                <svg class="child-head-svg" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+                  <circle id="faceCircle" cx="90" cy="95" r="55" fill="#fde68a"/>
 
-                <path d="M70 150 Q110 180 150 150" fill="#60a5fa"/>
-              </svg>
+                  <path d="M38 80 Q52 28 105 28 Q142 32 145 82 Q130 55 103 52 Q74 49 38 80 Z" fill="#8b5cf6"/>
+
+                  <circle id="cheekLeft" cx="64" cy="112" r="6" fill="#fca5a5" opacity="0.7"/>
+                  <circle id="cheekRight" cx="116" cy="112" r="6" fill="#fca5a5" opacity="0.7"/>
+
+                  <ellipse cx="72" cy="92" rx="10" ry="8" fill="white"/>
+                  <ellipse cx="108" cy="92" rx="10" ry="8" fill="white"/>
+
+                  <circle id="pupilLeft" cx="72" cy="92" r="3.5" fill="#0f172a"/>
+                  <circle id="pupilRight" cx="108" cy="92" r="3.5" fill="#0f172a"/>
+
+                  <line id="browLeft" x1="62" y1="78" x2="80" y2="82" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
+                  <line id="browRight" x1="100" y1="82" x2="118" y2="78" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
+
+                  <path d="M91 96 Q98 105 92 112" stroke="#c08457" stroke-width="2.5" fill="none"/>
+
+                  <path id="mouthLine" d="M72 128 Q90 140 108 128" stroke="#7f1d1d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                  <ellipse id="mouthOpen" cx="90" cy="129" rx="14" ry="11" fill="#7f1d1d" style="display:none;"></ellipse>
+                  <path id="tongue" d="M82 132 Q90 145 98 132 L98 138 Q90 149 82 138 Z"
+                        fill="#fb7185" style="display:none;"></path>
+
+                  <text id="coldMark" x="90" y="24" text-anchor="middle" font-size="22" style="display:none;">❄️</text>
+                </svg>
+
+                <svg class="thermo-side-svg" viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="48" y="20" width="24" height="140" rx="12" fill="#f8fafc" stroke="#334155" stroke-width="4"/>
+                  <rect id="miniMercury" x="52" y="50" width="16" height="106" rx="8" fill="#f59e0b"/>
+                  <circle id="miniBulb" cx="60" cy="176" r="24" fill="#f59e0b" stroke="#334155" stroke-width="4"/>
+
+                  <line x1="78" y1="35" x2="95" y2="35" stroke="#334155" stroke-width="2"/>
+                  <line x1="78" y1="65" x2="95" y2="65" stroke="#334155" stroke-width="2"/>
+                  <line x1="78" y1="95" x2="95" y2="95" stroke="#334155" stroke-width="2"/>
+                  <line x1="78" y1="125" x2="95" y2="125" stroke="#334155" stroke-width="2"/>
+                  <line x1="78" y1="155" x2="95" y2="155" stroke="#334155" stroke-width="2"/>
+
+                  <text id="thermoLabel" x="60" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#991b1b">36,6 °C</text>
+                </svg>
+              </div>
             </div>
           </div>
 
@@ -740,6 +777,22 @@
 
     const results = document.getElementById("results");
     const answerBox = document.getElementById("answerBox");
+
+    const faceCircle = document.getElementById("faceCircle");
+    const cheekLeft = document.getElementById("cheekLeft");
+    const cheekRight = document.getElementById("cheekRight");
+    const pupilLeft = document.getElementById("pupilLeft");
+    const pupilRight = document.getElementById("pupilRight");
+    const browLeft = document.getElementById("browLeft");
+    const browRight = document.getElementById("browRight");
+    const mouthLine = document.getElementById("mouthLine");
+    const mouthOpen = document.getElementById("mouthOpen");
+    const tongue = document.getElementById("tongue");
+    const coldMark = document.getElementById("coldMark");
+
+    const miniMercury = document.getElementById("miniMercury");
+    const miniBulb = document.getElementById("miniBulb");
+    const thermoLabel = document.getElementById("thermoLabel");
 
     function formatNumber(n, maxDecimals = 2){
       return new Intl.NumberFormat("cs-CZ", {
@@ -888,6 +941,104 @@
       stateBadge.textContent = badge;
     }
 
+    function updatePatientFace(c){
+      let faceColor = "#fde68a";
+      let cheekColor = "#fca5a5";
+      let thermoColor = "#22c55e";
+
+      coldMark.style.display = "none";
+      mouthLine.style.display = "block";
+      mouthOpen.style.display = "none";
+      tongue.style.display = "none";
+
+      pupilLeft.setAttribute("cy", "92");
+      pupilRight.setAttribute("cy", "92");
+
+      browLeft.setAttribute("x1", "62");
+      browLeft.setAttribute("y1", "78");
+      browLeft.setAttribute("x2", "80");
+      browLeft.setAttribute("y2", "82");
+
+      browRight.setAttribute("x1", "100");
+      browRight.setAttribute("y1", "82");
+      browRight.setAttribute("x2", "118");
+      browRight.setAttribute("y2", "78");
+
+      mouthLine.setAttribute("d", "M72 128 Q90 140 108 128");
+
+      if(c < 35){
+        faceColor = "#e2e8f0";
+        cheekColor = "#bfdbfe";
+        thermoColor = "#60a5fa";
+
+        coldMark.style.display = "block";
+        mouthLine.setAttribute("d", "M72 136 Q90 124 108 136");
+
+        browLeft.setAttribute("x1", "62");
+        browLeft.setAttribute("y1", "84");
+        browLeft.setAttribute("x2", "80");
+        browLeft.setAttribute("y2", "78");
+
+        browRight.setAttribute("x1", "100");
+        browRight.setAttribute("y1", "78");
+        browRight.setAttribute("x2", "118");
+        browRight.setAttribute("y2", "84");
+      }
+      else if(c >= 35 && c < 37.3){
+        faceColor = "#fde68a";
+        cheekColor = "#fca5a5";
+        thermoColor = "#22c55e";
+        mouthLine.setAttribute("d", "M72 128 Q90 140 108 128");
+      }
+      else if(c >= 37.3 && c < 40){
+        faceColor = "#fca5a5";
+        cheekColor = "#ef4444";
+        thermoColor = "#f97316";
+
+        mouthLine.setAttribute("d", "M72 136 Q90 124 108 136");
+
+        browLeft.setAttribute("x1", "62");
+        browLeft.setAttribute("y1", "82");
+        browLeft.setAttribute("x2", "80");
+        browLeft.setAttribute("y2", "78");
+
+        browRight.setAttribute("x1", "100");
+        browRight.setAttribute("y1", "78");
+        browRight.setAttribute("x2", "118");
+        browRight.setAttribute("y2", "82");
+      }
+      else{
+        faceColor = "#ef4444";
+        cheekColor = "#dc2626";
+        thermoColor = "#dc2626";
+
+        mouthLine.style.display = "none";
+        mouthOpen.style.display = "block";
+        tongue.style.display = "block";
+
+        pupilLeft.setAttribute("cy", "88");
+        pupilRight.setAttribute("cy", "88");
+
+        browLeft.setAttribute("x1", "62");
+        browLeft.setAttribute("y1", "80");
+        browLeft.setAttribute("x2", "80");
+        browLeft.setAttribute("y2", "76");
+
+        browRight.setAttribute("x1", "100");
+        browRight.setAttribute("y1", "76");
+        browRight.setAttribute("x2", "118");
+        browRight.setAttribute("y2", "80");
+      }
+
+      faceCircle.setAttribute("fill", faceColor);
+      cheekLeft.setAttribute("fill", cheekColor);
+      cheekRight.setAttribute("fill", cheekColor);
+
+      miniMercury.setAttribute("fill", thermoColor);
+      miniBulb.setAttribute("fill", thermoColor);
+      thermoLabel.textContent = `${formatNumber(c,1)} °C`;
+    }
+
     function updateResults(c){
       const f = fromCelsius(c, "F");
       const k = fromCelsius(c, "K");
@@ -975,9 +1126,11 @@
 
       setThermometer(c);
       updateVisual(c);
+      updatePatientFace(c);
       updateResults(c);
 
-      digitalDisplay.textContent = `${formatNumber(c,1)} °C  |  ${formatNumber(fromCelsius(c,"F"),1)} °F  |  ${formatNumber(fromCelsius(c,"K"),1)} K`;
+      digitalDisplay.textContent =
+        `${formatNumber(c,1)} °C  |  ${formatNumber(fromCelsius(c,"F"),1)} °F  |  ${formatNumber(fromCelsius(c,"K"),1)} K`;
     }
 
     tempInput.addEventListener("input", () => updateAll(false));
