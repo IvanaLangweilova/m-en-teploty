@@ -621,7 +621,7 @@
         <h2>Teploměr a digitální měření</h2>
 
         <div class="scene-wrap">
-          <div class="scene-title">SLEDUJ TEPLOTU A JEJÍ VÝZNAM</div>
+          <div class="scene-title">SLEDUJ TEPLOTU VZDUCHU A PROSTŘEDÍ</div>
 
           <div class="scene-area">
             <div class="thermo-box">
@@ -642,9 +642,9 @@
 
               <div class="visual-title" id="visualTitle">Příjemná teplota</div>
               <div class="visual-desc" id="visualDesc">
-                Běžná pokojová nebo příjemná teplota. Venku ani doma není příliš zima ani horko.
+                Běžná pokojová nebo příjemná venkovní teplota. Není příliš zima ani příliš horko.
               </div>
-              <div class="badge" id="stateBadge">Běžná teplota</div>
+              <div class="badge" id="stateBadge">Běžná teplota vzduchu</div>
 
               <div class="display" id="digitalDisplay" style="margin-top:18px; width:100%;">
                 20,0 °C
@@ -678,17 +678,16 @@
           </div>
 
           <div class="hint">
-            Zadej teplotu číslem nebo použij posuvník. Aplikace ti teplotu převede do dalších jednotek
-            a zároveň ukáže, co taková teplota znamená v běžném životě.
+            Zadej teplotu číslem nebo použij posuvník. Nahoře se teplota chápe jako teplota vzduchu nebo prostředí.
+            Tělesná teplota člověka je vysvětlena samostatně dole u panáčka.
           </div>
 
           <div class="quick">
             <button data-c="-10">-10 °C</button>
             <button data-c="0">0 °C</button>
             <button data-c="20">20 °C</button>
-            <button data-c="36.6">36,6 °C</button>
-            <button data-c="37.5">37,5 °C</button>
-            <button data-c="39">39 °C</button>
+            <button data-c="30">30 °C</button>
+            <button data-c="40">40 °C</button>
             <button data-c="100">100 °C</button>
           </div>
         </div>
@@ -714,8 +713,9 @@
           <strong>Příklady pro žáky:</strong><br>
           - <strong>0 °C</strong> – voda začíná mrznout.<br>
           - <strong>20 °C</strong> – příjemná pokojová teplota.<br>
+          - <strong>30 °C</strong> – horký den, je dobré více pít a vyhledat stín.<br>
           - <strong>36,6 °C</strong> – přibližná normální tělesná teplota člověka.<br>
-          - <strong>39 °C</strong> – vysoká horečka.<br>
+          - <strong>39 °C</strong> – vysoká horečka, pokud jde o tělesnou teplotu.<br>
           - <strong>100 °C</strong> – voda se vaří.
         </div>
 
@@ -796,7 +796,7 @@
 
           <div class="warning">
             <strong>Kdy volat lékaře nebo rychlou pomoc:</strong><br>
-            Pokud má člověk velmi vysokou teplotu, špatně dýchá, je zmatený, nereaguje,
+            Pokud má člověk velmi vysokou tělesnou teplotu, špatně dýchá, je zmatený, nereaguje,
             omdlévá, má křeče nebo se jeho stav rychle zhoršuje, je nutné ihned vyhledat pomoc.
           </div>
         </div>
@@ -990,10 +990,9 @@
     function getStateText(c){
       if(c < 0) return "mráz";
       if(c < 10) return "chladno";
-      if(c < 30) return "příjemně";
-      if(c < 38) return "horko";
-      if(c < 41) return "horečka";
-      if(c < 100) return "velmi horké";
+      if(c < 25) return "příjemně";
+      if(c < 35) return "horko";
+      if(c < 100) return "extrémní horko";
 
       return "var";
     }
@@ -1019,56 +1018,59 @@
     }
 
     function getStateSentence(c){
-      if(c < 0) return "Je pod bodem mrazu. Venku bývá led a voda může zmrznout.";
+      if(c < 0) return "Je pod bodem mrazu. Venku může být led, sníh a voda může zmrznout.";
       if(c < 10) return "Je chladno. Hodí se teplejší oblečení.";
-      if(c < 30) return "Je to běžná nebo příjemná teplota pro každodenní život.";
-      if(c < 38) return "Je velké teplo. Musíme více pít a chránit se před horkem.";
-      if(c < 41) return "Taková teplota může znamenat horečku a nemoc.";
-      if(c < 42) return "Jde o velmi vysokou a nebezpečnou tělesnou teplotu.";
-      if(c < 100) return "Tato teplota je v aplikaci zobrazena jako kritický, smrtelný stav.";
+      if(c < 25) return "Je to běžná nebo příjemná teplota pro každodenní život.";
+      if(c < 35) return "Je horko. Je dobré více pít a nezůstávat dlouho na přímém slunci.";
+      if(c < 100) return "Je extrémní horko. Člověk by měl pít dost vody, vyhledat stín a chránit se před přehřátím.";
 
-      return "Tato teplota odpovídá bodu varu vody nebo vyšší teplotě.";
+      return "Tato teplota odpovídá bodu varu vody nebo vyšší teplotě. Voda se při přibližně 100 °C vaří.";
     }
 
     function updateVisual(c){
       let title = "Příjemná teplota";
-      let desc = "Běžná pokojová nebo příjemná teplota. Venku ani doma není příliš zima ani horko.";
-      let badge = "Běžná teplota";
+      let desc = "Běžná pokojová nebo příjemná venkovní teplota. Není příliš zima ani příliš horko.";
+      let badge = "Běžná teplota vzduchu";
       let emoji = "🌤️";
 
       if(c < 0){
         title = "Mrzne";
-        desc = "Je pod bodem mrazu. Voda může zamrzat a venku bývá led nebo sníh.";
-        badge = "Zima / mráz";
+        desc = "Teplota je pod bodem mrazu. Voda může zamrzat, venku může být led nebo sníh.";
+        badge = "Mráz";
         emoji = "❄️";
-      } else if(c < 10){
+      }
+
+      else if(c < 10){
         title = "Chladno";
-        desc = "Je chladnější počasí. Hodí se bunda nebo svetr.";
+        desc = "Je chladno. Venku se hodí bunda, svetr nebo čepice.";
         badge = "Chladné počasí";
         emoji = "🧥";
-      } else if(c < 30){
+      }
+
+      else if(c < 25){
         title = "Příjemná teplota";
-        desc = "Je to příjemná teplota pro běžný den doma i venku.";
-        badge = "Běžný den";
+        desc = "Je příjemně. Taková teplota bývá vhodná pro běžný den doma i venku.";
+        badge = "Příjemné počasí";
         emoji = "🌤️";
-      } else if(c < 38){
+      }
+
+      else if(c < 35){
         title = "Horko";
-        desc = "Je opravdu teplo. Je důležité pít dostatek tekutin a chránit se před sluncem.";
+        desc = "Je horko. Je dobré pít více vody, chránit se před sluncem a odpočívat ve stínu.";
         badge = "Horký den";
         emoji = "☀️";
-      } else if(c < 41){
-        title = "Horečka";
-        desc = "Taková teplota může znamenat horečku. Je vhodné odpočívat, pít a sledovat zdravotní stav.";
-        badge = "Nemoc / horečka";
-        emoji = "🤒";
-      } else if(c < 100){
-        title = "Velmi vysoká teplota";
-        desc = "Takto vysoká teplota je velmi nebezpečná a je potřeba rychle vyhledat pomoc.";
-        badge = "Nebezpečný stav";
+      }
+
+      else if(c < 100){
+        title = "Extrémní horko";
+        desc = "Je velmi vysoká teplota prostředí. Člověk by měl hodně pít, schovat se do stínu a chránit se před přehřátím.";
+        badge = "Velké horko";
         emoji = "🔥";
-      } else {
+      }
+
+      else {
         title = "Voda se vaří";
-        desc = "Při přibližně 100 °C se voda vaří. To využíváme při vaření i v laboratoři.";
+        desc = "Při přibližně 100 °C se voda vaří. To využíváme při vaření, v laboratoři nebo při pokusech.";
         badge = "Bod varu vody";
         emoji = "♨️";
       }
